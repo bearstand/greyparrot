@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" >
+        <LinearLayout
+     	   android:layout_width="0dp"
+     	   android:layout_height="match_parent"
+           android:layout_weight="3"
+           android:orientation="vertical"
+           android:divider="#FFFFFFFF">
+		    <Button
+		        android:id="@+id/record"
+                android:layout_weight="1" 
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="2dp"
+                android:background="#FFFF8100"
+                android:textColor="#FF063041"
+		        android:text="@string/record" >
+		    </Button>
+           
+		    <Button
+		        android:id="@+id/play"
+                android:layout_weight="1" 
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="2dp"
+                android:background="#FF00933B"
+		        android:text="@string/play" >
+		    </Button>
+          </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="0dp"
+           android:layout_height="match_parent"
+           android:layout_weight="2"
+           android:orientation="vertical" >
+		    <Button
+		        android:id="@+id/open"
+                android:layout_weight="1" 
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="2dp"
+                android:background="#FF9854A9"
+		        android:text="@string/open" >
+		    </Button>
+    	</LinearLayout>
+
+        
+</LinearLayout>
