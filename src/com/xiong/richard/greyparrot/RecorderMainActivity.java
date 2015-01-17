@@ -31,12 +31,14 @@ public class RecorderMainActivity extends Activity {
 			if ( mp3Record.isRecording() ) {
 				mp3Record.stop();					
 			}
-				
-			Intent intent = new Intent();  
-			intent.setAction(android.content.Intent.ACTION_VIEW);  
-			File file = new File(mp3Record.getFilePath());  
-			intent.setDataAndType(Uri.fromFile(file), "audio/*");  
-			startActivity(intent);
+			
+			if ( mp3Record.getFilePath()!=null){
+				Intent intent = new Intent();  
+				intent.setAction(android.content.Intent.ACTION_VIEW);  
+				File file = new File(mp3Record.getFilePath());  
+				intent.setDataAndType(Uri.fromFile(file), "audio/*");  
+				startActivity(intent);
+			}
 				
 		}
 	};
