@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" 
     android:padding="10dp"
-    android:background="#FFefdd15"
+    android:background="@drawable/file_list_color"
     android:textColor="#FF063041"
     android:textSize="24sp" >
 

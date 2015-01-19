@@ -42,14 +42,13 @@ public class FileListActivity extends ListActivity {
 		setListAdapter( new ArrayAdapter< String> ( this, R.layout.list_item, fileNameArray));
 		
 		mListView = getListView();
-		mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 	      @Override
 	      public boolean onItemLongClick(AdapterView<?> parent, View view,
 	        int position, long id) {
-	    	//TODO: find a way to change selected color
-	    	//view.setBackgroundColor(Color.LTGRAY);
+	    	view.setSelected(true);
 	    	currentPosition=position;
 	    	showDialog((String)FileListActivity.this.getListAdapter().getItem(position));
 	        return true;
@@ -67,7 +66,7 @@ public class FileListActivity extends ListActivity {
 	  @Override
 	  protected void onListItemClick(ListView l, View v, int position, long id) {
 	    super.onListItemClick(l, v, position, id);
-	    //v.setBackgroundColor(Color.LTGRAY);
+	    v.setSelected(true);
 	    String filename=this.getListAdapter().getItem(position).toString();
 	    if ( filename.equals(DELETE_NAME)) return;
 	    String fullPathName = storagePath+"/"+ filename;
@@ -125,8 +124,8 @@ public class FileListActivity extends ListActivity {
       				String fullPath=storagePath+'/'+filename;
       				File f=new File(fullPath);
       				if( f.delete() ){
-      					
-      				  updateItemAtCurrentPosition("--deleted--");
+	
+      				  updateItemAtCurrentPosition(DELETE_NAME);
       				  closeSelf();
       				}else{
       					//TODO: alert user
@@ -137,7 +136,9 @@ public class FileListActivity extends ListActivity {
       		renameButton.setOnClickListener(new View.OnClickListener() {
 			   @Override
 			   public void onClick(View v) {
-				   if ( filenameChanged==false ) editText.requestFocus();
+				   if ( filenameChanged==false ) {
+					   editText.requestFocus();
+				   }
 				   else {
 					   File origFile=new File(storagePath+'/'+filename);
 					   File targetFile=new File(storagePath+'/'+editText.getText());
