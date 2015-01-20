@@ -3,54 +3,51 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical" >
+
     <EditText
         android:id="@+id/filenameText"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="2"
         android:ems="20"
-		android:maxEms="20"
-		android:layout_width="wrap_content"
         android:inputType="text"
-        >
-        
+        android:maxEms="20" >
     </EditText>
-     
-    <RelativeLayout
-       android:layout_height="0dp"
-       android:layout_width="wrap_content"
-       android:layout_weight="3"
-       
-       android:paddingLeft="16dp"
-       android:paddingRight="16dp"  >
-       <Button 
-           android:id="@+id/delete"
-           android:text="@string/delete"
-           android:layout_width="96dp"
-           android:layout_height="wrap_content"
-           android:focusable="true"
-           android:focusableInTouchMode="true"
-           >
-           <requestFocus />
-       </Button>
-       <Button 
-           android:id="@+id/rename"
-           android:ems="6"
-           android:text="@string/rename"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_toRightOf="@id/delete">
-       </Button>
 
-      
-       <Button 
-           android:id="@+id/close"
-           android:text="@string/close"
-           android:layout_width="96dp"
-           android:layout_height="wrap_content"
-           android:layout_toRightOf="@id/rename">
-       </Button>
-        
-        
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" >
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:text="@string/delete" >
+
+            <requestFocus />
+        </Button>
+
+        <Button
+            android:id="@+id/rename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/delete"
+            android:ems="6"
+            android:text="@string/rename" >
+        </Button>
+
+        <Button
+            android:id="@+id/close"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/rename"
+            android:text="@string/close" >
+        </Button>
     </RelativeLayout>
 
 </LinearLayout>

@@ -3,51 +3,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}" >
-        <LinearLayout
-     	   android:layout_width="0dp"
-     	   android:layout_height="match_parent"
-           android:layout_weight="3"
-           android:orientation="vertical"
-           android:divider="#FFFFFFFF">
-		    <Button
-		        android:id="@+id/record"
-                android:layout_weight="1" 
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_margin="2dp"
-                android:background="#FFFF8100"
-                android:textColor="#FF063041"
-		        android:text="@string/record" >
-		    </Button>
-           
-		    <Button
-		        android:id="@+id/play"
-                android:layout_weight="1" 
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_margin="2dp"
-                android:background="@color/green"
-                android:textColor="#FF063041"
-		        android:text="@string/play" >
-		    </Button>
-          </LinearLayout>
 
-       <LinearLayout
-           android:layout_width="0dp"
-           android:layout_height="match_parent"
-           android:layout_weight="2"
-           android:orientation="vertical" >
-		    <Button
-		        android:id="@+id/open"
-                android:layout_weight="1" 
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_margin="2dp"
-                android:background="@color/pink"
-                android:textColor="#FF063041"
-		        android:text="@string/open" >
-		    </Button>
-    	</LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:divider="#FFFFFFFF"
+        android:orientation="vertical" >
 
-        
+        <Button
+            android:id="@+id/record"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="#FFFF8100"
+            android:text="@string/record"
+            android:textColor="#FF063041" >
+        </Button>
+
+        <Button
+            android:id="@+id/play"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@color/green"
+            android:text="@string/play"
+            android:textColor="#FF063041" >
+        </Button>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/open"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@color/pink"
+            android:text="@string/open"
+            android:textColor="#FF063041" >
+        </Button>
+    </LinearLayout>
+
 </LinearLayout>

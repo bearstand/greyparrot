@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioFormat;
@@ -16,11 +17,13 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.os.PowerManager;
 import android.util.Log;
-public class Mp3Recorder {
-	
+
+public class Mp3Recorder extends AbstractService {
+
 	public static final int MSG_REC_STARTED = 0;
 	public static final int MSG_REC_STOPPED = 1;
 	public static final int MSG_ERROR_GET_MIN_BUFFERSIZE = 2;
@@ -30,59 +33,49 @@ public class Mp3Recorder {
 	public static final int MSG_ERROR_AUDIO_ENCODE = 6;
 	public static final int MSG_ERROR_WRITE_FILE = 7;
 	public static final int MSG_ERROR_CLOSE_FILE = 8;
-	
-	
-	private int mSampleRate=22050; //22050,8000
-	private String mFilePath=null;
-	private boolean mIsRecording=false;
+
+	private int mSampleRate = 22050; // 22050,8000
+	private String mFilePath = null;
+	private boolean mIsRecording = false;
 	private FileOutputStream output = null;
-	private static String FLAG="MP3Recorder";
+	private static String FLAG = "MP3Recorder";
 	private String storagePath;
 	private RecorderMainActivity mainUI;
-	
-	public boolean isRecording(){
-		return mIsRecording;
-	}
-	
-	private void createRecFile() throws FileNotFoundException{
-		setFilePath();
-		
-		output = new FileOutputStream(new File(mFilePath));
+
+	public void onStartService() {
 
 	}
-	
-	public String getFilePath(){
-		return mFilePath;
+
+	public void onStopService() {
+		// stop recording thread
+		stop();
+		// close file
 	}
-	
-	private void setFilePath(){
-		Date time=new Date();
-		String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH:mm:ss").format(time);
-		mFilePath=getStorageDir()+"/"+"GP" + timeStamp + ".mp3";
+
+	public void onReceiveMessage(Message msg) {
+
 	}
-	
-	public String getStorageDir() {
-		if ( storagePath !=null ) return(storagePath);
-		
-		String storagePath=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)+ "/recorded";
 
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		// set file name
+		mFilePath = intent.getStringExtra("filename");
+		// create file
+		try {
+			output = new FileOutputStream(new File(mFilePath));
+			mIsRecording = true;
+			// start recording thread
+			recordThread = new RecordThread();
+			recordThread.start();
+		} catch (FileNotFoundException e) {
 
-		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-			File storageDir = null;
-			storageDir = new File(storagePath);
-
-			if ( !storageDir.exists() ){
-				storageDir.mkdirs();
-			}
-				
 		}
-	
-		return storagePath;
-	}
-	
 
-	private Thread recordThread=null;
-	
+		return START_STICKY; // run until explicitly stopped.
+	}
+
+	private Thread recordThread = null;
+
 	static {
 		System.loadLibrary("mp3lame");
 	}
@@ -114,49 +107,37 @@ public class Mp3Recorder {
 			}
 		}
 	};
-	
-	public Mp3Recorder(RecorderMainActivity mainActivity){
-		mainUI=mainActivity;
-		
+
+	public Mp3Recorder() {
+
 	}
-	
-	public void init(){
-		try {
-			createRecFile();
-		}catch( FileNotFoundException e) {
-			
-		}
-	}
-	public void start(){
+
+	public void start() {
 		if (mIsRecording) {
 			return;
 		}
-
-		recordThread=new RecordThread();
+		recordThread = new RecordThread();
 		recordThread.start();
 	}
-	
-	public void stop(){
-		mIsRecording=false;
+
+	public void stop() {
+		mIsRecording = false;
 		try {
 			recordThread.join();
-			
-		}catch(InterruptedException  e){
-			
+		} catch (InterruptedException e) {
+
 		}
-		mainUI.stopRecording();
 	}
-	
+
 	private class RecordThread extends Thread {
 		@Override
 		public void run() {
-			android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
-			
+			android.os.Process
+					.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
 
-			
-			final int minBufferSize = AudioRecord.getMinBufferSize(
-					mSampleRate, AudioFormat.CHANNEL_IN_MONO,
-					AudioFormat.ENCODING_PCM_16BIT);
+			final int minBufferSize = AudioRecord
+					.getMinBufferSize(mSampleRate, AudioFormat.CHANNEL_IN_MONO,
+							AudioFormat.ENCODING_PCM_16BIT);
 
 			if (minBufferSize < 0) {
 				if (mHandler != null) {
@@ -171,20 +152,27 @@ public class Mp3Recorder {
 					AudioFormat.ENCODING_PCM_16BIT, minBufferSize * 2);
 
 			// PCM buffer size (5sec)
-			short[] buffer = new short[mSampleRate * (16 / 8) * 1 * 5]; // SampleRate[Hz] * 16bit * Mono * 5sec
+			short[] buffer = new short[mSampleRate * (16 / 8) * 1 * 5]; // SampleRate[Hz]
+																		// *
+																		// 16bit
+																		// *
+																		// Mono
+																		// *
+																		// 5sec
 			byte[] mp3buffer = new byte[(int) (7200 + buffer.length * 2 * 1.25)];
-
 
 			// Lame init
 			SimpleLame.init(mSampleRate, 1, mSampleRate, 32);
 
-			PowerManager pm = (PowerManager) mainUI.getApplicationContext().getSystemService(Context.POWER_SERVICE);
-			PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Mp3Recorder");
-			
-			mIsRecording = true; 
+			// PowerManager pm = (PowerManager)
+			// mainUI.getApplicationContext().getSystemService(Context.POWER_SERVICE);
+			// PowerManager.WakeLock wl =
+			// pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Mp3Recorder");
+
+			mIsRecording = true;
 			try {
 				try {
-					audioRecord.startRecording(); 
+					audioRecord.startRecording();
 				} catch (IllegalStateException e) {
 
 					if (mHandler != null) {
@@ -195,12 +183,12 @@ public class Mp3Recorder {
 
 				try {
 					if (mHandler != null) {
-							mHandler.sendEmptyMessage(MSG_REC_STARTED);
+						mHandler.sendEmptyMessage(MSG_REC_STARTED);
 					}
 
 					int readSize = 0;
 
-					wl.acquire();
+					// wl.acquire();
 					while (mIsRecording) {
 						readSize = audioRecord.read(buffer, 0, minBufferSize);
 						if (readSize < 0) {
@@ -212,10 +200,9 @@ public class Mp3Recorder {
 
 						else if (readSize == 0) {
 							;
-					}
-					else {
-							int encResult = SimpleLame.encode(buffer,
-									buffer, readSize, mp3buffer);
+						} else {
+							int encResult = SimpleLame.encode(buffer, buffer,
+									readSize, mp3buffer);
 							if (encResult < 0) {
 								if (mHandler != null) {
 									mHandler.sendEmptyMessage(MSG_ERROR_AUDIO_ENCODE);
@@ -226,7 +213,7 @@ public class Mp3Recorder {
 								try {
 									output.write(mp3buffer, 0, encResult);
 								} catch (IOException e) {
-											
+
 									if (mHandler != null) {
 										mHandler.sendEmptyMessage(MSG_ERROR_WRITE_FILE);
 									}
@@ -260,15 +247,14 @@ public class Mp3Recorder {
 						}
 					}
 				} finally {
-					audioRecord.stop(); 
+					audioRecord.stop();
 					audioRecord.release();
-					wl.release();
+					// wl.release();
 				}
 			} finally {
 				SimpleLame.close();
-				mIsRecording = false; 
+				mIsRecording = false;
 			}
-
 
 			if (mHandler != null) {
 				mHandler.sendEmptyMessage(MSG_REC_STOPPED);

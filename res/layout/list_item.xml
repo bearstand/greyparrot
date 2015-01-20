@@ -2,9 +2,9 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/listFileName"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:padding="10dp"
+    android:layout_height="match_parent"
     android:background="@drawable/file_list_color"
+    android:padding="10dp"
     android:textColor="#FF063041"
     android:textSize="24sp" >
 
