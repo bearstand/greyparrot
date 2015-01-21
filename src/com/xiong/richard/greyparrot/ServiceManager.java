@@ -25,7 +25,7 @@ public class ServiceManager {
 	private Messenger mService = null;
 	private Handler mIncomingHandler = null;
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());
-
+	private final boolean needBind=false;  //currently we don't need to bind service. May need it to pause record.
 	private class IncomingHandler extends Handler {
 		@Override
 		public void handleMessage(Message msg) {
@@ -133,9 +133,11 @@ public class ServiceManager {
 	}
 
 	private void doBindService() {
-		mActivity.bindService(new Intent(mActivity, mServiceClass),
+		if ( needBind ){
+			mActivity.bindService(new Intent(mActivity, mServiceClass),
 				mConnection, Context.BIND_AUTO_CREATE);
-		mIsBound = true;
+			mIsBound = true;
+		}
 	}
 
 	private void doUnbindService() {

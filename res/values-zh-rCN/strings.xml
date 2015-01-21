@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">灰鹦鹉</string>
+    <string name="record">录音</string>
+    <string name="play">播放</string>
+    <string name="stop">停止</string>
+    <string name="open">历史文件</string>
+    <string name="save">保存</string>
+    <string name="rename">重命名</string>
+    <string name="delete">删除</string>
+    <string name="close">关闭</string>
+    <string name="init_reminder">录制MP3格式文件</string>
+    <string name="recording_to">正在录制:</string>
+	<string name="recordedFile">录音文件:</string>
+
+</resources>

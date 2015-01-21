@@ -5,10 +5,12 @@
     <string name="record">Record</string>
     <string name="play">Play</string>
     <string name="stop">STOP</string>
-    <string name="open">Open File</string>
+    <string name="open">History Files</string>
     <string name="save">Save</string>
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
     <string name="close">Close</string>
-
+    <string name="init_reminder">Record Any Sound Into MP3 File</string>
+    <string name="recording_to">Recording to:</string>
+	<string name="recordedFile">Recorded to:</string>
 </resources>
