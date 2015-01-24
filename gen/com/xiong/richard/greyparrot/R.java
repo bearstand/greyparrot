@@ -45,6 +45,7 @@ public final class R {
         public static final int app_name=0x7f050000;
         public static final int close=0x7f050008;
         public static final int delete=0x7f050007;
+        public static final int deletedFileName=0x7f05000c;
         public static final int init_reminder=0x7f050009;
         public static final int open=0x7f050004;
         public static final int play=0x7f050002;

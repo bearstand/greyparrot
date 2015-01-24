@@ -34,7 +34,7 @@ public class FileListActivity extends ListActivity {
 	private final static String storagePath = Environment
 			.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
 			+ "/recorded";
-	private final String DELETE_NAME = "--deleted--";
+	private  String fileDeleted = null;     
 	private String newFilename = null;
 	private ListView mListView = null;
 	private long currentPosition = 0;
@@ -42,7 +42,7 @@ public class FileListActivity extends ListActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		fileDeleted=getString(R.string.deletedFileName);
 		fileNameArray = new File(storagePath).list();
 		java.util.Arrays.sort(fileNameArray, Collections.reverseOrder());
 		setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item,
@@ -78,7 +78,7 @@ public class FileListActivity extends ListActivity {
 		super.onListItemClick(l, v, position, id);
 		v.setSelected(true);
 		String filename = this.getListAdapter().getItem(position).toString();
-		if (filename.equals(DELETE_NAME))
+		if (filename.equals(fileDeleted))
 			return;
 		String fullPathName = storagePath + "/" + filename;
 
@@ -137,7 +137,7 @@ public class FileListActivity extends ListActivity {
 					File f = new File(fullPath);
 					if (f.delete()) {
 
-						updateItemAtCurrentPosition(DELETE_NAME);
+						updateItemAtCurrentPosition(fileDeleted);
 						closeSelf();
 					} else {
 						// TODO: alert user

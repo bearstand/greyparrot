@@ -13,5 +13,6 @@
     <string name="init_reminder">录制MP3格式文件</string>
     <string name="recording_to">正在录制:</string>
 	<string name="recordedFile">录音文件:</string>
+	<string name="deletedFileName"> --已删除--</string>
 
 </resources>

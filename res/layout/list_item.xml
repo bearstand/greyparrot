@@ -6,6 +6,6 @@
     android:background="@drawable/file_list_color"
     android:padding="10dp"
     android:textColor="#FF063041"
-    android:textSize="24sp" >
+    android:textSize="16sp" >
 
 </TextView>

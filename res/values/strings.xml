@@ -13,4 +13,5 @@
     <string name="init_reminder">Record Any Sound Into MP3 File</string>
     <string name="recording_to">Recording to:</string>
 	<string name="recordedFile">Recorded to:</string>
+	<string name="deletedFileName"> --DELETED--</string>
 </resources>

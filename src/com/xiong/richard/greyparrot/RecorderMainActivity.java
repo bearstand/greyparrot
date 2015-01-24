@@ -32,6 +32,7 @@ public class RecorderMainActivity extends Activity {
 	private static final int RECORDING_STATE = 1;
 	private static final int RECORDING_STOPED = 2;
 
+
 	// private Mp3Recorder mp3Record=new Mp3Recorder(this);
 
 	private ServiceManager service;
@@ -213,15 +214,20 @@ public class RecorderMainActivity extends Activity {
 			break;
 		case RECORDING_STOPED:
 			recordButton.setText(R.string.record);
-			infoText.setText(getString(R.string.recordedFile) + filename);
+			infoText.setText(getString(R.string.recordedFile) + getBasename(filename));
 			break;
 		case RECORDING_STATE:
 			recordButton.setText(R.string.stop);
-			infoText.setText(getString(R.string.recording_to) + filename);
+			infoText.setText(getString(R.string.recording_to) + getBasename(filename));
 			break;
 
 		}
 		return;
 
+	}
+	private String getBasename( String fullPath){
+		int lastSlash;
+		lastSlash=fullPath.lastIndexOf('/');
+		return fullPath.substring(lastSlash+1);
 	}
 }
