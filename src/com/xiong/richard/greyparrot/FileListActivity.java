@@ -5,32 +5,28 @@ import java.io.File;
 import android.util.Log;
 import android.view.KeyEvent;
 
-import java.text.SimpleDateFormat;
+
 import java.util.Collections;
-import java.util.Date;
+
 
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ListActivity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.*;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class FileListActivity extends ListActivity {
 	private final static String TAG="ListActivity";
@@ -38,7 +34,6 @@ public class FileListActivity extends ListActivity {
 			.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
 			+ "/recorded";
 	private  String fileDeleted = null;     
-	private String newFilename = null;
 	private ListView mListView = null;
 	private long currentPosition = 0;
 	private View selectedView=null;
@@ -71,8 +66,6 @@ public class FileListActivity extends ListActivity {
 	}
 
 	private void updateItemAtCurrentPosition(String filename) {
-		int visiblePosition = mListView.getFirstVisiblePosition();
-
 		if ( selectedView!=null ){
 			((TextView) selectedView.findViewById(R.id.listFileName)).setText(filename);
 		}else{

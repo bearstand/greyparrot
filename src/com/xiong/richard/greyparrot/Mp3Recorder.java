@@ -4,20 +4,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import android.app.Activity;
-import android.app.Service;
-import android.content.Context;
+
 import android.content.Intent;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
-import android.net.Uri;
-import android.os.Environment;
+
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
 import android.os.PowerManager;
 import android.util.Log;
@@ -38,9 +32,7 @@ public class Mp3Recorder extends AbstractService {
 	private String mFilePath = null;
 	private boolean mIsRecording = false;
 	private FileOutputStream output = null;
-	private static String FLAG = "MP3Recorder";
-	private String storagePath;
-	private RecorderMainActivity mainUI;
+	private static String TAG = "MP3Recorder";
 
 	public void onStartService() {
 
