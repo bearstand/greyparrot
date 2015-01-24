@@ -1,6 +1,8 @@
 package com.xiong.richard.greyparrot;
 
 import java.io.File;
+
+import android.util.Log;
 import android.view.KeyEvent;
 
 import java.text.SimpleDateFormat;
@@ -31,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class FileListActivity extends ListActivity {
+	private final static String TAG="ListActivity";
 	private final static String storagePath = Environment
 			.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
 			+ "/recorded";
@@ -38,6 +41,7 @@ public class FileListActivity extends ListActivity {
 	private String newFilename = null;
 	private ListView mListView = null;
 	private long currentPosition = 0;
+	private View selectedView=null;
 	private String[] fileNameArray = null;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,7 @@ public class FileListActivity extends ListActivity {
 					int position, long id) {
 				view.setSelected(true);
 				currentPosition = position;
+				selectedView=view;
 				showDialog((String) FileListActivity.this.getListAdapter()
 						.getItem(position));
 				return true;
@@ -67,9 +72,12 @@ public class FileListActivity extends ListActivity {
 
 	private void updateItemAtCurrentPosition(String filename) {
 		int visiblePosition = mListView.getFirstVisiblePosition();
-		View view = mListView
-				.getChildAt((int) (currentPosition - visiblePosition));
-		((TextView) view.findViewById(R.id.listFileName)).setText(filename);
+
+		if ( selectedView!=null ){
+			((TextView) selectedView.findViewById(R.id.listFileName)).setText(filename);
+		}else{
+			Log.i(TAG, "selectedView is null");
+		}
 		fileNameArray[(int) currentPosition] = filename;
 	}
 
