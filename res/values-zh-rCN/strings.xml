@@ -15,5 +15,7 @@
 	<string name="recordedFile">录音文件:</string>
 	<string name="deletedFileName"> --已删除--</string>
 	<string name="isRecording"> 灰鹦鹉正在录音</string>
+	<string name="config"> 配置</string>
+	<string name="help"> 帮助</string>
 
 </resources>

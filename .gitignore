@@ -3,3 +3,5 @@
 *.d
 *.apk
 *.dex
+*.jar
+gen
