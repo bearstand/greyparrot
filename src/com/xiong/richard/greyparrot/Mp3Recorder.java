@@ -14,7 +14,10 @@ import android.media.MediaRecorder;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.app.Notification;
+import android.app.PendingIntent;
 
 public class Mp3Recorder extends AbstractService {
 
@@ -32,7 +35,9 @@ public class Mp3Recorder extends AbstractService {
 	private String mFilePath = null;
 	private boolean mIsRecording = false;
 	private FileOutputStream output = null;
-	private static String TAG = "MP3Recorder";
+	private static final String TAG = "MP3Recorder";
+	
+	private static final int NOTIFICATION_ID=99;
 
 	public void onStartService() {
 
@@ -59,11 +64,26 @@ public class Mp3Recorder extends AbstractService {
 			// start recording thread
 			recordThread = new RecordThread();
 			recordThread.start();
+			runAsForeground();
 		} catch (FileNotFoundException e) {
 
 		}
 
 		return START_STICKY; // run until explicitly stopped.
+	}
+
+	private void runAsForeground(){
+		Intent notificationIntent = new Intent(this, RecorderMainActivity.class);
+		PendingIntent pendingIntent=PendingIntent.getActivity(this, 0,
+				notificationIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		Notification notification=new NotificationCompat.Builder(this)
+									.setSmallIcon(R.drawable.ic_launcher)
+									.setContentText(getString(R.string.isRecording))
+									.setContentIntent(pendingIntent).build();
+		
+		startForeground(NOTIFICATION_ID, notification);
+	
 	}
 
 	private Thread recordThread = null;
@@ -119,6 +139,7 @@ public class Mp3Recorder extends AbstractService {
 		} catch (InterruptedException e) {
 
 		}
+		stopForeground(true);
 	}
 
 	private class RecordThread extends Thread {

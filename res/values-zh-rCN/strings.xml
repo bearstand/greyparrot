@@ -14,5 +14,6 @@
     <string name="recording_to">正在录制:</string>
 	<string name="recordedFile">录音文件:</string>
 	<string name="deletedFileName"> --已删除--</string>
+	<string name="isRecording"> 灰鹦鹉正在录音</string>
 
 </resources>

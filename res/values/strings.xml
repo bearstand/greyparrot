@@ -14,4 +14,5 @@
     <string name="recording_to">Recording to:</string>
 	<string name="recordedFile">Recorded to:</string>
 	<string name="deletedFileName"> --DELETED--</string>
+	<string name="isRecording"> GreyParrot is Recording</string>
 </resources>
