@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-
 import android.content.Intent;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
@@ -36,8 +35,8 @@ public class Mp3Recorder extends AbstractService {
 	private boolean mIsRecording = false;
 	private FileOutputStream output = null;
 	private static final String TAG = "MP3Recorder";
-	
-	private static final int NOTIFICATION_ID=99;
+
+	private static final int NOTIFICATION_ID = 99;
 
 	public void onStartService() {
 
@@ -72,18 +71,18 @@ public class Mp3Recorder extends AbstractService {
 		return START_STICKY; // run until explicitly stopped.
 	}
 
-	private void runAsForeground(){
+	private void runAsForeground() {
 		Intent notificationIntent = new Intent(this, RecorderMainActivity.class);
-		PendingIntent pendingIntent=PendingIntent.getActivity(this, 0,
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
-		
-		Notification notification=new NotificationCompat.Builder(this)
-									.setSmallIcon(R.drawable.ic_launcher)
-									.setContentText(getString(R.string.isRecording))
-									.setContentIntent(pendingIntent).build();
-		
+
+		Notification notification = new NotificationCompat.Builder(this)
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setContentText(getString(R.string.isRecording))
+				.setContentIntent(pendingIntent).build();
+
 		startForeground(NOTIFICATION_ID, notification);
-	
+
 	}
 
 	private Thread recordThread = null;
@@ -91,34 +90,6 @@ public class Mp3Recorder extends AbstractService {
 	static {
 		System.loadLibrary("mp3lame");
 	}
-
-	private static Handler mHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case MSG_REC_STARTED:
-				break;
-			case MSG_REC_STOPPED:
-				break;
-			case MSG_ERROR_GET_MIN_BUFFERSIZE:
-				break;
-			case MSG_ERROR_CREATE_FILE:
-				break;
-			case MSG_ERROR_REC_START:
-				break;
-			case MSG_ERROR_AUDIO_RECORD:
-				break;
-			case MSG_ERROR_AUDIO_ENCODE:
-				break;
-			case MSG_ERROR_WRITE_FILE:
-				break;
-			case MSG_ERROR_CLOSE_FILE:
-				break;
-			default:
-				break;
-			}
-		}
-	};
 
 	public Mp3Recorder() {
 
@@ -142,6 +113,10 @@ public class Mp3Recorder extends AbstractService {
 		stopForeground(true);
 	}
 
+	private void sendResultMessage(int flag) {
+
+	}
+
 	private class RecordThread extends Thread {
 		@Override
 		public void run() {
@@ -153,9 +128,7 @@ public class Mp3Recorder extends AbstractService {
 							AudioFormat.ENCODING_PCM_16BIT);
 
 			if (minBufferSize < 0) {
-				if (mHandler != null) {
-					mHandler.sendEmptyMessage(MSG_ERROR_GET_MIN_BUFFERSIZE);
-				}
+				sendResultMessage(MSG_ERROR_GET_MIN_BUFFERSIZE);
 				return;
 			}
 
@@ -177,101 +150,54 @@ public class Mp3Recorder extends AbstractService {
 			// Lame init
 			SimpleLame.init(mSampleRate, 1, mSampleRate, 32);
 
-			// PowerManager pm = (PowerManager)
-			// mainUI.getApplicationContext().getSystemService(Context.POWER_SERVICE);
-			// PowerManager.WakeLock wl =
-			// pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Mp3Recorder");
-
 			mIsRecording = true;
 			try {
-				try {
-					audioRecord.startRecording();
-				} catch (IllegalStateException e) {
+				audioRecord.startRecording();
 
-					if (mHandler != null) {
-						mHandler.sendEmptyMessage(MSG_ERROR_REC_START);
-					}
-					return;
-				}
+				sendResultMessage(MSG_REC_STARTED);
 
-				try {
-					if (mHandler != null) {
-						mHandler.sendEmptyMessage(MSG_REC_STARTED);
-					}
+				int readSize = 0;
 
-					int readSize = 0;
-
-					// wl.acquire();
-					while (mIsRecording) {
-						readSize = audioRecord.read(buffer, 0, minBufferSize);
-						if (readSize < 0) {
-							if (mHandler != null) {
-								mHandler.sendEmptyMessage(MSG_ERROR_AUDIO_RECORD);
-							}
+				while (mIsRecording) {
+					readSize = audioRecord.read(buffer, 0, minBufferSize);
+					if (readSize < 0) {
+						sendResultMessage(MSG_ERROR_AUDIO_RECORD);
+						break;
+					} else if (readSize > 0) {
+						int encResult = SimpleLame.encode(buffer, buffer,
+								readSize, mp3buffer);
+						if (encResult < 0) {
+							sendResultMessage(MSG_ERROR_AUDIO_ENCODE);
 							break;
 						}
-
-						else if (readSize == 0) {
-							;
-						} else {
-							int encResult = SimpleLame.encode(buffer, buffer,
-									readSize, mp3buffer);
-							if (encResult < 0) {
-								if (mHandler != null) {
-									mHandler.sendEmptyMessage(MSG_ERROR_AUDIO_ENCODE);
-								}
-								break;
-							}
-							if (encResult != 0) {
-								try {
-									output.write(mp3buffer, 0, encResult);
-								} catch (IOException e) {
-
-									if (mHandler != null) {
-										mHandler.sendEmptyMessage(MSG_ERROR_WRITE_FILE);
-									}
-									break;
-								}
-							}
+						if (encResult != 0) {
+							output.write(mp3buffer, 0, encResult);
 						}
 					}
-
-					int flushResult = SimpleLame.flush(mp3buffer);
-					if (flushResult < 0) {
-						if (mHandler != null) {
-							mHandler.sendEmptyMessage(MSG_ERROR_AUDIO_ENCODE);
-						}
-					}
-					if (flushResult != 0) {
-						try {
-							output.write(mp3buffer, 0, flushResult);
-						} catch (IOException e) {
-							if (mHandler != null) {
-								mHandler.sendEmptyMessage(MSG_ERROR_WRITE_FILE);
-							}
-						}
-					}
-
-					try {
-						output.close();
-					} catch (IOException e) {
-						if (mHandler != null) {
-							mHandler.sendEmptyMessage(MSG_ERROR_CLOSE_FILE);
-						}
-					}
-				} finally {
-					audioRecord.stop();
-					audioRecord.release();
-					// wl.release();
 				}
+
+				int flushResult = SimpleLame.flush(mp3buffer);
+				if (flushResult < 0) {
+					sendResultMessage(MSG_ERROR_AUDIO_ENCODE);
+				} else if (flushResult > 0) {
+					output.write(mp3buffer, 0, flushResult);
+				}
+
+				output.close();
+
+			} catch (IOException e) {
+				sendResultMessage(MSG_ERROR_WRITE_FILE);
+			} catch (IllegalStateException e) {
+				sendResultMessage(MSG_ERROR_REC_START);
 			} finally {
+				audioRecord.stop();
+				audioRecord.release();
 				SimpleLame.close();
 				mIsRecording = false;
 			}
 
-			if (mHandler != null) {
-				mHandler.sendEmptyMessage(MSG_REC_STOPPED);
-			}
+			sendResultMessage(MSG_REC_STOPPED);
+
 		}
 	}
 

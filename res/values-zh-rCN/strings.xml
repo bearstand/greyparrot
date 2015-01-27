@@ -17,5 +17,6 @@
 	<string name="isRecording"> 灰鹦鹉正在录音</string>
 	<string name="config"> 配置</string>
 	<string name="help"> 帮助</string>
+	<string name="openDir">打开目录</string>
 
 </resources>

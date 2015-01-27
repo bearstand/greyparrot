@@ -17,4 +17,5 @@
 	<string name="isRecording">GreyParrot is Recording</string>
 		<string name="config">Settings</string>
 	<string name="help">Help</string>
+	<string name="openDir">Open Dir</string>
 </resources>

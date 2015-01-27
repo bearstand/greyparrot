@@ -13,6 +13,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,11 +45,10 @@ public class FileListActivity extends ListActivity {
 		fileDeleted=getString(R.string.deletedFileName);
 		fileNameArray = new File(storagePath).list();
 		java.util.Arrays.sort(fileNameArray, Collections.reverseOrder());
-		setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item,
-				fileNameArray));
+
 
 		mListView = getListView();
-		getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
@@ -62,6 +62,9 @@ public class FileListActivity extends ListActivity {
 				return true;
 			}
 		});
+
+		setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item,
+				fileNameArray));
 
 	}
 
