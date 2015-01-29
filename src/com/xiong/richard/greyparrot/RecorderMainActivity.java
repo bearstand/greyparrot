@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -82,6 +84,8 @@ public class RecorderMainActivity extends ActionBarActivity {
 		public void onClick(View v) {
 			Intent intent = new Intent(RecorderMainActivity.this,
 					FileListActivity.class);
+			//TODO: replace the key with a public constant
+			intent.putExtra("storagePath", getStorageDir()); 
 			startActivity(intent);
 			// intent.setAction(android.content.Intent.ACTION_VIEW);
 			// Uri uri = Uri.parse(mp3Record.getStorageDir());
@@ -103,10 +107,9 @@ public class RecorderMainActivity extends ActionBarActivity {
 		playButton.setOnClickListener(playListener);
 		recordButton.setOnClickListener(recordListener);
 		openButton.setOnClickListener(openListener);
-
+		
 		this.service = new ServiceManager(this, Mp3Recorder.class, null);
 
-		// restoreMe(savedInstanceState);
 
 	}
 
@@ -242,7 +245,17 @@ public class RecorderMainActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.config) {
+        if (id == R.id.help) {
+        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        	builder.setMessage(R.string.fileDir)
+            .setTitle(R.string.help)
+        	.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+                }
+            });
+        	AlertDialog dialog = builder.create();
+        	dialog.show();
             return true;
         }
         return super.onOptionsItemSelected(item);

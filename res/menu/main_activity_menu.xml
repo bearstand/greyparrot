@@ -3,15 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:contex="${relativePackage}.${activityClass}" >
 
-    <item
+    <!--  item
         android:id="@+id/config"
         android:title="@string/config"
-        android:icon="@drawable/ic_action_settings"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom"/ -->
     <item
         android:id="@+id/help"
         android:title="@string/help"
-        android:icon="@drawable/ic_action_help"
         app:showAsAction="ifRoom"/>
 
 </menu>

@@ -18,5 +18,7 @@
 	<string name="config"> 配置</string>
 	<string name="help"> 帮助</string>
 	<string name="openDir">打开目录</string>
+	<string name="ok">知道了</string>
+	<string name="fileDir">录音文件保存在音乐目录下</string>
 
 </resources>

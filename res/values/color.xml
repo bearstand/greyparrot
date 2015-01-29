@@ -9,5 +9,7 @@
     <color name="sky_blue">#ffAEEEEE</color>
     <color name="translucent_red">#80ff0000</color>
     <color name="dark_blue">#FF063041</color>
+    <color name="gold">#FFFF8100</color>
+    
 
 </resources>

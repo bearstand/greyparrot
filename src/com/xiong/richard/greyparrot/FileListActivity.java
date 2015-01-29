@@ -1,14 +1,17 @@
 package com.xiong.richard.greyparrot;
 
+import android.support.v7.app.ActionBarActivity;
+
 import java.io.File;
 
 import android.util.Log;
 import android.view.KeyEvent;
 
-
 import java.util.Collections;
 
-
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -29,26 +32,32 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class FileListActivity extends ListActivity {
-	private final static String TAG="ListActivity";
-	private final static String storagePath = Environment
-			.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-			+ "/recorded";
-	private  String fileDeleted = null;     
+public class FileListActivity extends ActionBarActivity {
+	private final static String TAG = "ListActivity";
+	private String storagePath = null;
+	private String fileDeleted = null;
 	private ListView mListView = null;
 	private long currentPosition = 0;
-	private View selectedView=null;
+	private View selectedView = null;
 	private String[] fileNameArray = null;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		fileDeleted=getString(R.string.deletedFileName);
+		setContentView(R.layout.file_list_layout);
+
+		Intent intent = getIntent(); 
+		storagePath=intent.getStringExtra("storagePath");
+		
+		fileDeleted = getString(R.string.deletedFileName);
 		fileNameArray = new File(storagePath).list();
 		java.util.Arrays.sort(fileNameArray, Collections.reverseOrder());
 
-
-		mListView = getListView();
+		mListView = (ListView) findViewById(R.id.list);
 		mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		mListView.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item,
+				fileNameArray));
+		
+		
 		mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
@@ -56,42 +65,56 @@ public class FileListActivity extends ListActivity {
 					int position, long id) {
 				view.setSelected(true);
 				currentPosition = position;
-				selectedView=view;
-				showDialog((String) FileListActivity.this.getListAdapter()
-						.getItem(position));
+				selectedView = view;
+				showDialog((String) mListView.getAdapter().getItem(position));
 				return true;
 			}
 		});
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-		setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item,
-				fileNameArray));
+			public void onItemClick(AdapterView<?> parent, View v,
+					int position, long id) {
+				v.setSelected(true);
+				String filename = mListView.getAdapter().getItem(position).toString();
+				if (filename.equals(fileDeleted))
+					return;
+				String fullPathName = storagePath + "/" + filename;
+
+				Intent intent = new Intent();
+				intent.setAction(android.content.Intent.ACTION_VIEW);
+				File file = new File(fullPathName);
+				intent.setDataAndType(Uri.fromFile(file), "audio/*");
+				startActivity(intent);
+			}
+		});
+
+		/*
+		Button openDirBtn=(Button)findViewById(R.id.openDir);
+		openDirBtn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				//File file = new File(storagePath);
+				Intent intent = new Intent();
+				intent.setAction(android.content.Intent.ACTION_GET_CONTENT);
+				Uri data = Uri.parse(storagePath);
+
+				intent.setDataAndType(data, "file/*");
+				startActivity(Intent.createChooser(intent, "Open folder"));
+			}
+		});
+		*/
 
 	}
 
 	private void updateItemAtCurrentPosition(String filename) {
-		if ( selectedView!=null ){
-			((TextView) selectedView.findViewById(R.id.listFileName)).setText(filename);
-		}else{
+		if (selectedView != null) {
+			((TextView) selectedView.findViewById(R.id.listFileName))
+					.setText(filename);
+		} else {
 			Log.i(TAG, "selectedView is null");
 		}
 		fileNameArray[(int) currentPosition] = filename;
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		v.setSelected(true);
-		String filename = this.getListAdapter().getItem(position).toString();
-		if (filename.equals(fileDeleted))
-			return;
-		String fullPathName = storagePath + "/" + filename;
-
-		Intent intent = new Intent();
-		intent.setAction(android.content.Intent.ACTION_VIEW);
-		File file = new File(fullPathName);
-		intent.setDataAndType(Uri.fromFile(file), "audio/*");
-		startActivity(intent);
-	}
 
 	void showDialog(String filename) {
 
@@ -122,6 +145,7 @@ public class FileListActivity extends ListActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			filename = getArguments().getString("filename");
+			setStyle(STYLE_NO_TITLE,0);
 
 		}
 
@@ -186,6 +210,7 @@ public class FileListActivity extends ListActivity {
 
 			return v;
 		}
+
 
 		private void closeSelf() {
 			getActivity().getFragmentManager().popBackStack();
