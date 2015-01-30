@@ -30,7 +30,7 @@ public class Mp3Recorder extends AbstractService {
 	public static final int MSG_ERROR_WRITE_FILE = 7;
 	public static final int MSG_ERROR_CLOSE_FILE = 8;
 
-	private int mSampleRate = 22050; // 22050,8000
+	private int mSampleRate = 22050; // 44100? 22050,8000
 	private String mFilePath = null;
 	private boolean mIsRecording = false;
 	private FileOutputStream output = null;
