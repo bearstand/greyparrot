@@ -20,5 +20,6 @@
 	<string name="openDir">打开目录</string>
 	<string name="ok">知道了</string>
 	<string name="fileDir">录音文件保存在音乐目录下</string>
+	<string name="share">分享</string>
 
 </resources>

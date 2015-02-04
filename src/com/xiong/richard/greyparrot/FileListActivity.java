@@ -140,6 +140,7 @@ public class FileListActivity extends ActionBarActivity {
 		private Button deleteButton = null;
 		private Button renameButton = null;
 		private Button closeButton = null;
+		private Button shareButton = null;
 		private boolean filenameChanged = false;
 
 		public void onCreate(Bundle savedInstanceState) {
@@ -151,13 +152,14 @@ public class FileListActivity extends ActionBarActivity {
 
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View v = inflater.inflate(R.layout.edit_delete_file, container,
+			View v = inflater.inflate(R.layout.file_manage, container,
 					false);
 			editText = (EditText) v.findViewById(R.id.filenameText);
 			editText.setText(filename);
 			deleteButton = (Button) v.findViewById(R.id.delete);
 			renameButton = (Button) v.findViewById(R.id.rename);
 			closeButton = (Button) v.findViewById(R.id.close);
+			shareButton = (Button) v.findViewById(R.id.share);
 
 			deleteButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
@@ -208,6 +210,17 @@ public class FileListActivity extends ActionBarActivity {
 				}
 			});
 
+			shareButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent shareIntent = new Intent();
+					shareIntent.setAction(Intent.ACTION_SEND);
+					shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(storagePath + '/' + filename)));
+					shareIntent.setType("audio/mpeg");
+					startActivity(Intent.createChooser(shareIntent, "send to"));
+					closeSelf();
+				}
+			});
 			return v;
 		}
 

@@ -117,6 +117,28 @@ public class Mp3Recorder extends AbstractService {
 
 	}
 
+	//TODO: separate it to a new class if it become complicate
+	//refer to : http://en.wikipedia.org/wiki/ID3
+	// add the MP3 tag in the file
+	private void addID3() throws IOException{
+		byte[] tag="TAG".getBytes();
+		byte[] title=mFilePath.substring(mFilePath.lastIndexOf('/')+3,mFilePath.lastIndexOf('.')).getBytes();
+		byte[] artist="GreyParrot APP".getBytes();
+		byte[] buf=new byte[128];
+		
+		fillBuf(buf, tag, 0);
+		fillBuf(buf, title, 3);
+		fillBuf(buf, artist, 33);
+
+		output.write(buf);
+	}
+	
+	private void fillBuf(byte[] dest, byte[] src, int offset){
+		for ( int i=0; i< src.length;i++){
+			dest[offset+i]=src[i];
+		}
+	}
+	
 	private class RecordThread extends Thread {
 		@Override
 		public void run() {
@@ -182,7 +204,7 @@ public class Mp3Recorder extends AbstractService {
 				} else if (flushResult > 0) {
 					output.write(mp3buffer, 0, flushResult);
 				}
-
+				addID3();
 				output.close();
 
 			} catch (IOException e) {

@@ -20,4 +20,5 @@
 	<string name="openDir">Open Dir</string>
 	<string name="ok">OK</string>
 	<string name="fileDir">Files are saved under music folder</string>
+	<string name="share">Share</string>
 </resources>
