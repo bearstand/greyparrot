@@ -9,18 +9,12 @@ import android.view.KeyEvent;
 
 import java.util.Collections;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ListActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +50,7 @@ public class FileListActivity extends ActionBarActivity {
 		mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		mListView.setAdapter(new ArrayAdapter<String>(this, R.layout.list_item,
 				fileNameArray));
-		
+
 		
 		mListView.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -147,13 +141,12 @@ public class FileListActivity extends ActionBarActivity {
 			super.onCreate(savedInstanceState);
 			filename = getArguments().getString("filename");
 			setStyle(STYLE_NO_TITLE,0);
-
 		}
 
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View v = inflater.inflate(R.layout.file_manage, container,
-					false);
+			
+			View v = inflater.inflate(R.layout.file_manage, container,false);
 			editText = (EditText) v.findViewById(R.id.filenameText);
 			editText.setText(filename);
 			deleteButton = (Button) v.findViewById(R.id.delete);
