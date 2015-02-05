@@ -55,6 +55,10 @@ public class Mp3Recorder extends AbstractService {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// set file name
+		if ( intent == null){
+			Log.i(TAG, "recieved null intent");
+			return(START_NOT_STICKY);
+		}
 		mFilePath = intent.getStringExtra("filename");
 		// create file
 		try {
@@ -67,8 +71,12 @@ public class Mp3Recorder extends AbstractService {
 		} catch (FileNotFoundException e) {
 
 		}
-
-		return START_STICKY; // run until explicitly stopped.
+		// TODO: If the service is stopped by system,it is better to continue recording, but it needs to :
+		// 1. get a new filename
+		// 2. record in the new file and let the user know the new file
+		// refert to : http://stackoverflow.com/questions/17430690/android-ics-service-restart-hang-on-intent-getextras
+		return START_NOT_STICKY; 
+							
 	}
 
 	private void runAsForeground() {
