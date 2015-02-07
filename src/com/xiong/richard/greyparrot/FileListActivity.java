@@ -5,28 +5,22 @@ import android.support.v7.app.ActionBarActivity;
 import java.io.File;
 
 import android.util.Log;
-import android.view.KeyEvent;
 
 import java.util.Collections;
 
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class FileListActivity extends ActionBarActivity {
+public class FileListActivity extends ActionBarActivity  {
 	private final static String TAG = "ListActivity";
 	private String storagePath = null;
 	private String fileDeleted = null;
@@ -82,7 +76,7 @@ public class FileListActivity extends ActionBarActivity {
 			}
 		});
 
-		/*
+		/* TODO: find a method to open default file browser
 		Button openDirBtn=(Button)findViewById(R.id.openDir);
 		openDirBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -99,7 +93,7 @@ public class FileListActivity extends ActionBarActivity {
 
 	}
 
-	private void updateItemAtCurrentPosition(String filename) {
+	public void updateItemAtCurrentPosition(String filename) {
 		if (selectedView != null) {
 			((TextView) selectedView.findViewById(R.id.listFileName))
 					.setText(filename);
@@ -119,109 +113,8 @@ public class FileListActivity extends ActionBarActivity {
 		}
 		ft.addToBackStack(null);
 
-		// Create and show the dialog.
-		DialogFragment newFragment = new FileManageFragement();
-		Bundle args = new Bundle();
-		args.putString("filename", filename);
-		newFragment.setArguments(args);
-
+		FileManageFragment newFragment = FileManageFragment.newInstance(filename, storagePath);
 		newFragment.show(ft, "dialog");
-	}
-
-	private class FileManageFragement extends DialogFragment {
-		private String filename = null;
-		private EditText editText = null;
-		private Button deleteButton = null;
-		private Button renameButton = null;
-		private Button closeButton = null;
-		private Button shareButton = null;
-		private boolean filenameChanged = false;
-
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			filename = getArguments().getString("filename");
-			setStyle(STYLE_NO_TITLE,0);
-		}
-
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			
-			View v = inflater.inflate(R.layout.file_manage, container,false);
-			editText = (EditText) v.findViewById(R.id.filenameText);
-			editText.setText(filename);
-			deleteButton = (Button) v.findViewById(R.id.delete);
-			renameButton = (Button) v.findViewById(R.id.rename);
-			closeButton = (Button) v.findViewById(R.id.close);
-			shareButton = (Button) v.findViewById(R.id.share);
-
-			deleteButton.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View v) {
-					String fullPath = storagePath + '/' + filename;
-					File f = new File(fullPath);
-					if (f.delete()) {
-
-						updateItemAtCurrentPosition(fileDeleted);
-						closeSelf();
-					} else {
-						// TODO: alert user
-					}
-				}
-			});
-
-			renameButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (filenameChanged == false) {
-						editText.requestFocus();
-					} else {
-						File origFile = new File(storagePath + '/' + filename);
-						File targetFile = new File(storagePath + '/'
-								+ editText.getText());
-						if (origFile.renameTo(targetFile)) {
-
-							updateItemAtCurrentPosition(editText.getText()
-									.toString());
-							closeSelf();
-						} else {
-							// TODO : alert user the failure
-						}
-
-					}
-				}
-			});
-			editText.setOnKeyListener(new View.OnKeyListener() {
-				public boolean onKey(View v, int keyCode, KeyEvent event) {
-					filenameChanged = true;
-					renameButton.setText(R.string.save);
-					return false;
-				}
-			});
-			closeButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					closeSelf();
-				}
-			});
-
-			shareButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent shareIntent = new Intent();
-					shareIntent.setAction(Intent.ACTION_SEND);
-					shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(storagePath + '/' + filename)));
-					shareIntent.setType("audio/mpeg");
-					startActivity(Intent.createChooser(shareIntent, "send to"));
-					closeSelf();
-				}
-			});
-			return v;
-		}
-
-
-		private void closeSelf() {
-			getActivity().getFragmentManager().popBackStack();
-			return;
-		}
 	}
 
 }
