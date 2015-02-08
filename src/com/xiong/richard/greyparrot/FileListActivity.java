@@ -25,11 +25,12 @@ public class FileListActivity extends ActionBarActivity  {
 	private String storagePath = null;
 	private String fileDeleted = null;
 	private ListView mListView = null;
-	private long currentPosition = 0;
+	private long currentPosition = -1;
 	private View selectedView = null;
 	private String[] fileNameArray = null;
 
 	public void onCreate(Bundle savedInstanceState) {
+		Log.i(TAG,"oncreate "+"current postion:"+currentPosition);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.file_list_layout);
 
@@ -97,10 +98,11 @@ public class FileListActivity extends ActionBarActivity  {
 		if (selectedView != null) {
 			((TextView) selectedView.findViewById(R.id.listFileName))
 					.setText(filename);
+			if ( currentPosition >=0 ) fileNameArray[(int) currentPosition] = filename;
 		} else {
 			Log.i(TAG, "selectedView is null");
 		}
-		fileNameArray[(int) currentPosition] = filename;
+		
 	}
 
 

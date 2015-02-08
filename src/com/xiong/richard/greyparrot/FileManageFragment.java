@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ public class FileManageFragment extends DialogFragment {
 	private Button closeButton = null;
 	private Button shareButton = null;
 	private boolean filenameChanged = false;
+	private static final String TAG="FileManageFragment";
 
 	public static FileManageFragment newInstance( String filename, String storagePath){
 		FileManageFragment fragment=new FileManageFragment();
@@ -52,7 +54,7 @@ public class FileManageFragment extends DialogFragment {
 		renameButton = (Button) v.findViewById(R.id.rename);
 		closeButton = (Button) v.findViewById(R.id.close);
 		shareButton = (Button) v.findViewById(R.id.share);
-
+		Log.i(TAG, "onCreateView "+ "filename="+filename);
 		deleteButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				String fullPath = storagePath + '/' + filename;
