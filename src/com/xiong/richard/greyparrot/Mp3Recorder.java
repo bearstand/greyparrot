@@ -67,7 +67,7 @@ public class Mp3Recorder extends AbstractService {
 			recordThread.start();
 			runAsForeground();
 		} catch (FileNotFoundException e) {
-
+			Log.e(TAG, "create file failed", e);
 		}
 		// TODO: If the service is stopped by system,it is better to continue recording, but it needs to :
 		// 1. get a new filename
@@ -114,6 +114,7 @@ public class Mp3Recorder extends AbstractService {
 		try {
 			recordThread.join();
 		} catch (InterruptedException e) {
+			Log.e(TAG, "join thread failed", e);
 
 		}
 		stopForeground(true);
@@ -130,12 +131,16 @@ public class Mp3Recorder extends AbstractService {
 		byte[] tag="TAG".getBytes();
 		byte[] title=mFilePath.substring(mFilePath.lastIndexOf('/')+3,mFilePath.lastIndexOf('.')).getBytes();
 		byte[] artist="GreyParrot APP".getBytes();
+		byte[] album="richard.xiong.li@gmail.com".getBytes();
+		byte[] year="2015".getBytes();
 		byte[] buf=new byte[128];
 		
 		fillBuf(buf, tag, 0);
 		fillBuf(buf, title, 3);
 		fillBuf(buf, artist, 33);
-
+		fillBuf(buf, album, 63);
+		fillBuf(buf, year, 93);
+		
 		output.write(buf);
 	}
 	
@@ -215,8 +220,11 @@ public class Mp3Recorder extends AbstractService {
 
 			} catch (IOException e) {
 				sendResultMessage(MSG_ERROR_WRITE_FILE);
+				Log.e(TAG, "write file failed", e);
+				
 			} catch (IllegalStateException e) {
 				sendResultMessage(MSG_ERROR_REC_START);
+				Log.e(TAG, "record voice error", e);
 			} finally {
 				audioRecord.stop();
 				audioRecord.release();

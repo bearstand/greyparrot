@@ -21,7 +21,7 @@ import android.util.Log;
 public class ServiceManager {
 	private Class<? extends AbstractService> mServiceClass;
 	private Context mActivity;
-	private boolean mIsBound;
+	private boolean mIsBound=false;
 	private Messenger mService = null;
 	private Handler mIncomingHandler = null;
 	private final Messenger mMessenger = new Messenger(new IncomingHandler());

@@ -21,5 +21,6 @@
 	<string name="ok">知道了</string>
 	<string name="fileDir">录音文件保存在音乐目录下</string>
 	<string name="share">分享</string>
+	<string name="send_log">发送日志</string>
 
 </resources>

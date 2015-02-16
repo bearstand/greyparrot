@@ -11,5 +11,10 @@
         android:id="@+id/help"
         android:title="@string/help"
         app:showAsAction="ifRoom"/>
+    
+    <item
+        android:id="@+id/send_log"
+        android:title="@string/send_log"
+        app:showAsAction="ifRoom"/>
 
 </menu>

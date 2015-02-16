@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 public class RecorderMainActivity extends ActionBarActivity {
 
-	private static final String LOG_TAG = "RecorderMainActivity";
+	private static final String TAG = "RecorderMainActivity";
 	private Button playButton = null;
 	private Button recordButton = null;
 	private Button openButton = null;
@@ -34,9 +34,6 @@ public class RecorderMainActivity extends ActionBarActivity {
 	private static final int INIT_STATE = 0;
 	private static final int RECORDING_STATE = 1;
 	private static final int RECORDING_STOPED = 2;
-
-
-	// private Mp3Recorder mp3Record=new Mp3Recorder(this);
 
 	private ServiceManager service;
 
@@ -87,12 +84,7 @@ public class RecorderMainActivity extends ActionBarActivity {
 			//TODO: replace the key with a public constant
 			intent.putExtra("storagePath", getStorageDir()); 
 			startActivity(intent);
-			// intent.setAction(android.content.Intent.ACTION_VIEW);
-			// Uri uri = Uri.parse(mp3Record.getStorageDir());
-			// intent.setDataAndType(uri, "resource/folder");
-			// startActivity(intent);
-			// intent.setDataAndType(uri, "text/csv");
-			// startActivity(Intent.createChooser(intent, "Open folder"));
+
 		}
 	};
 
@@ -117,14 +109,14 @@ public class RecorderMainActivity extends ActionBarActivity {
 		super.onSaveInstanceState(outState);
 		outState.putString(FILENAME_KEY, filename);
 
-		Log.i(LOG_TAG, "onSaveInstanceState filename:" + filename);
+		Log.i(TAG, "onSaveInstanceState filename:" + filename);
 
 	}
 
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 		restoreMe(savedInstanceState);
-		Log.i(LOG_TAG, "onRestoreInstanceState filename:" + filename);
+		Log.i(TAG, "onRestoreInstanceState filename:" + filename);
 	}
 
 	private void restoreMe(Bundle state) {
@@ -133,7 +125,7 @@ public class RecorderMainActivity extends ActionBarActivity {
 			if (service.isRunning()) {
 				isRecording = true;
 			}
-			Log.i(LOG_TAG, "restored filename:" + filename);
+			Log.i(TAG, "restored filename:" + filename);
 		}
 	}
 
@@ -156,7 +148,7 @@ public class RecorderMainActivity extends ActionBarActivity {
 		filename = settings.getString(FILENAME_KEY, null);
 		isRecording = service.isRunning();
 		
-		Log.i(LOG_TAG, "onResume:" + filename + "isRecording:" + isRecording);
+		Log.i(TAG, "onResume:" + filename + "isRecording:" + isRecording);
 		setUIByState(getState());
 	}
 
@@ -177,15 +169,20 @@ public class RecorderMainActivity extends ActionBarActivity {
 				.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
 				+ "/recorded";
 
-		if (Environment.MEDIA_MOUNTED.equals(Environment
-				.getExternalStorageState())) {
+		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
 			File storageDir = null;
 			storageDir = new File(storagePath);
 
 			if (!storageDir.exists()) {
 				storageDir.mkdirs();
 			}
-
+			
+			if ( !storageDir.canWrite()){
+				Log.e(TAG,"external dir is not writable:"+storagePath);
+			}
+		}else {
+			Log.e(TAG, "external dir is not mounted:"+storagePath);
+			
 		}
 
 		return storagePath;
@@ -194,7 +191,7 @@ public class RecorderMainActivity extends ActionBarActivity {
 	private int getState() {
 		if (filename == null) {
 			if (isRecording) {
-				Log.i(LOG_TAG,
+				Log.i(TAG,
 						"Wrong status: filename is null while is recording");
 				return (RECORDING_STATE);
 			} else {
@@ -245,18 +242,30 @@ public class RecorderMainActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.help) {
-        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        	builder.setMessage(R.string.fileDir)
-            .setTitle(R.string.help)
-        	.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    // User clicked OK button
-                }
-            });
-        	AlertDialog dialog = builder.create();
-        	dialog.show();
-            return true;
+        switch (id) {
+        	case R.id.help:
+	        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	        	builder.setMessage(R.string.fileDir)
+	            .setTitle(R.string.help)
+	        	.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int id) {
+	                    // User clicked OK button
+	                }
+	            });
+	        	AlertDialog dialog = builder.create();
+	        	dialog.show();
+	        	break;
+        	case R.id.send_log:
+        		Log.i(TAG,"info log is turned on");
+        		Log.e(TAG, "error log is turned on");
+        		Log.d(TAG, "debug log is turned on");
+        		Log.w(TAG, "warning log is turned on");
+        		startActivity(LogCollector.getLogReportIntent(this));
+        		Log.i(TAG,"info log is turned on for next collection");
+        		Log.e(TAG, "error log is turned on  for next collection");
+        		Log.d(TAG, "debug log is turned on for next collection");
+        		Log.w(TAG, "warning log is turned on for next collection");
+        		break;
         }
         return super.onOptionsItemSelected(item);
     }
