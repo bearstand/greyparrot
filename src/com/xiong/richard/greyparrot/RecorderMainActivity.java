@@ -105,7 +105,11 @@ public class RecorderMainActivity extends ActionBarActivity {
 		// http://stackoverflow.com/questions/601503/how-do-i-obtain-crash-data-from-my-android-application
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			        public void uncaughtException(Thread t, Throwable e) {
-			           Log.e(TAG, t + " throws exception: " + e);
+			           Log.e(TAG, t + " throws exception: " + e.getMessage());
+			           StackTraceElement[] stackTrace=e.getStackTrace();
+			           for ( int i=0; i<stackTrace.length; i++){
+			        	   Log.e(TAG, stackTrace[i].toString());
+			           }
 			           startActivity(LogCollector.getLogReportIntent(RecorderMainActivity.this));
 			        }
 			     });
