@@ -100,6 +100,16 @@ public class RecorderMainActivity extends ActionBarActivity {
 		recordButton.setOnClickListener(recordListener);
 		openButton.setOnClickListener(openListener);
 		
+		
+		//Thanks to this discussion : 
+		// http://stackoverflow.com/questions/601503/how-do-i-obtain-crash-data-from-my-android-application
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			        public void uncaughtException(Thread t, Throwable e) {
+			           Log.e(TAG, t + " throws exception: " + e);
+			           startActivity(LogCollector.getLogReportIntent(RecorderMainActivity.this));
+			        }
+			     });
+		
 		this.service = new ServiceManager(this, Mp3Recorder.class, null);
 
 

@@ -50,6 +50,7 @@ public class ServiceManager {
 			} catch (RemoteException e) {
 				// In this case the service has crashed before we could even do
 				// anything with it
+				Log.e("ServiceHandler", "connect to service failed", e);
 			}
 		}
 
@@ -153,6 +154,7 @@ public class ServiceManager {
 				} catch (RemoteException e) {
 					// There is nothing special we need to do if the service has
 					// crashed.
+					Log.e("serviceHandler","Service crashed", e);
 				}
 			}
 

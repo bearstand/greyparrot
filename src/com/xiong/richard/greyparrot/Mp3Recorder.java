@@ -66,6 +66,7 @@ public class Mp3Recorder extends AbstractService {
 			recordThread = new RecordThread();
 			recordThread.start();
 			runAsForeground();
+			
 		} catch (FileNotFoundException e) {
 			Log.e(TAG, "create file failed", e);
 		}
@@ -99,14 +100,6 @@ public class Mp3Recorder extends AbstractService {
 
 	public Mp3Recorder() {
 
-	}
-
-	public void start() {
-		if (mIsRecording) {
-			return;
-		}
-		recordThread = new RecordThread();
-		recordThread.start();
 	}
 
 	public void stop() {
