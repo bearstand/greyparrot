@@ -9,9 +9,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 
@@ -113,6 +118,8 @@ public class LogCollector {
 	public final static StringBuilder getDeviceInfo() {
 		final StringBuilder log = new StringBuilder();
 		
+		// TODO: add more information as this :
+		// http://androidblogger.blogspot.in/2009/12/how-to-improve-your-application-crash.html
 		log.append( "Here are important informations about Device : ");
         log.append(LINE_SEPARATOR); 
         log.append("android.os.Build.BOARD : " + android.os.Build.BOARD );
@@ -139,7 +146,7 @@ public class LogCollector {
 		return log;
 	}
 	
-	public static Intent getLogReportIntent(Context ctx) {
+	public static Intent getLogReportIntent(String infom, Context ctx) {
 		LogResult logs = collectLog(ctx);
 		
 		
@@ -149,6 +156,7 @@ public class LogCollector {
         
         StringBuilder log = new StringBuilder();
 
+        log.append(infom);
         log.append(LINE_SEPARATOR);
         log.append(LINE_SEPARATOR);
 
@@ -170,5 +178,20 @@ public class LogCollector {
         sendIntent.putExtra(Intent.EXTRA_TEXT, log.toString());
         
         return sendIntent;
+	}
+	
+	public static void alertUser(final Context ctxt){
+		Log.i(TAG, "building alertDialog");
+    	AlertDialog.Builder builder = new AlertDialog.Builder(ctxt);
+    	builder.setMessage(R.string.report_exception)
+        .setTitle(R.string.sorry)
+    	.setPositiveButton(R.string.send_log, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+		           ctxt.startActivity(LogCollector.getLogReportIntent("some unexpected error happend",ctxt));
+            }
+        })
+        .setNegativeButton(R.string.not_send_log, null);
+    	AlertDialog dialog = builder.create();
+    	dialog.show();
 	}
 }

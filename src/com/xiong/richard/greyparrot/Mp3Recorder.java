@@ -67,6 +67,10 @@ public class Mp3Recorder extends AbstractService {
 			recordThread.start();
 			runAsForeground();
 			
+			//TEST code for capture exception
+			//Log.e("TEST code", "throw a RuntimeException");
+			//throw( new RuntimeException());
+			
 		} catch (FileNotFoundException e) {
 			Log.e(TAG, "create file failed", e);
 		}

@@ -103,14 +103,15 @@ public class RecorderMainActivity extends ActionBarActivity {
 		
 		//Thanks to this discussion : 
 		// http://stackoverflow.com/questions/601503/how-do-i-obtain-crash-data-from-my-android-application
+		
 		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
 			        public void uncaughtException(Thread t, Throwable e) {
-			           Log.e(TAG, t + " throws exception: " + e.getMessage());
-			           StackTraceElement[] stackTrace=e.getStackTrace();
-			           for ( int i=0; i<stackTrace.length; i++){
-			        	   Log.e(TAG, stackTrace[i].toString());
-			           }
-			           startActivity(LogCollector.getLogReportIntent(RecorderMainActivity.this));
+			           Log.wtf(TAG, t + " throws exception: " + e.getMessage());
+		        	   Log.wtf(TAG, "stackTrace"+Log.getStackTraceString(e));
+
+			           //why this can't work?
+			           //LogCollector.alertUser(RecorderMainActivity.this);
+			           startActivity(LogCollector.getLogReportIntent(getString(R.string.report_exception), RecorderMainActivity.this));
 			        }
 			     });
 		
@@ -274,11 +275,7 @@ public class RecorderMainActivity extends ActionBarActivity {
         		Log.e(TAG, "error log is turned on");
         		Log.d(TAG, "debug log is turned on");
         		Log.w(TAG, "warning log is turned on");
-        		startActivity(LogCollector.getLogReportIntent(this));
-        		Log.i(TAG,"info log is turned on for next collection");
-        		Log.e(TAG, "error log is turned on  for next collection");
-        		Log.d(TAG, "debug log is turned on for next collection");
-        		Log.w(TAG, "warning log is turned on for next collection");
+        		startActivity( LogCollector.getLogReportIntent("--Please add any other infomation here:",this));
         		break;
         }
         return super.onOptionsItemSelected(item);

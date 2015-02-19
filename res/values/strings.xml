@@ -22,4 +22,7 @@
 	<string name="fileDir">Files are saved under music folder</string>
 	<string name="share">Share</string>
 	<string name="send_log">Send Log</string>
+	<string name="not_send_log">No</string>
+	<string name="sorry">Sorry</string>
+	<string name="report_exception"> Something unexpected happened to this APP. Please send the log to us to improve it. </string>
 </resources>
