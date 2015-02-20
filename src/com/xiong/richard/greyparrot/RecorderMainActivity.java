@@ -111,6 +111,9 @@ public class RecorderMainActivity extends ActionBarActivity {
 
 			           //why this can't work?
 			           //LogCollector.alertUser(RecorderMainActivity.this);
+		        	   
+		        	   // I tried to add a new activity to show message to user and send log.
+		        	   // But it doesn't work
 			           startActivity(LogCollector.getLogReportIntent(getString(R.string.report_exception), RecorderMainActivity.this));
 			        }
 			     });
