@@ -1,0 +1,4 @@
+<paths>
+    <files-path path="recorded/" name="records" />
+    <files-path path="log/" name="logs" />
+</paths>

@@ -3,9 +3,11 @@ package com.xiong.richard.greyparrot;
 import java.io.File;
 
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -111,7 +113,7 @@ public class FileManageFragment extends DialogFragment {
 				Intent shareIntent = new Intent();
 				shareIntent.setAction(Intent.ACTION_SEND);
 				shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(storagePath + '/' + filename)));
-				shareIntent.setType("audio/mpeg");
+				shareIntent.setType("*/*");
 				startActivity(Intent.createChooser(shareIntent, "send to"));
 				closeSelf();
 			}
@@ -123,6 +125,29 @@ public class FileManageFragment extends DialogFragment {
 	private void closeSelf() {
 		getActivity().getFragmentManager().popBackStack();
 		return;
+	}
+	
+	public static void playFile(Context ctx, String filename){
+		Intent intent = new Intent();
+		intent.setAction(android.content.Intent.ACTION_VIEW);
+		File file = new File(filename);
+		
+	    // Use the FileProvider to get a content URI
+		Uri fileUri;
+	    try {
+	        fileUri = FileProvider.getUriForFile(
+	        		ctx,
+	                "com.xiong.richard.greyparrot.fileprovider",
+	                file);
+			intent.setDataAndType(fileUri, "audio/*");
+			intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+			ctx.startActivity(intent);
+	    } catch (IllegalArgumentException e) {
+	        Log.e("File Selector",
+	              "The selected file can't be shared: " +
+	              filename);
+	    }
+		
 	}
 }
 

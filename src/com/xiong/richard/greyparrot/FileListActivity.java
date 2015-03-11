@@ -68,12 +68,9 @@ public class FileListActivity extends ActionBarActivity  {
 				if (filename.equals(fileDeleted))
 					return;
 				String fullPathName = storagePath + "/" + filename;
+				
+				FileManageFragment.playFile(FileListActivity.this, fullPathName);
 
-				Intent intent = new Intent();
-				intent.setAction(android.content.Intent.ACTION_VIEW);
-				File file = new File(fullPathName);
-				intent.setDataAndType(Uri.fromFile(file), "audio/*");
-				startActivity(intent);
 			}
 		});
 

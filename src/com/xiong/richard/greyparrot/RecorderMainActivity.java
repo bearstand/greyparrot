@@ -1,5 +1,6 @@
 package com.xiong.richard.greyparrot;
 
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBarActivity;
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -7,6 +8,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,11 +51,8 @@ public class RecorderMainActivity extends ActionBarActivity {
 			}
 
 			if (filename != null) {
-				Intent intent = new Intent();
-				intent.setAction(android.content.Intent.ACTION_VIEW);
-				File file = new File(filename);
-				intent.setDataAndType(Uri.fromFile(file), "audio/*");
-				startActivity(intent);
+				FileManageFragment.playFile(RecorderMainActivity.this, filename);
+
 			}
 
 		}
@@ -182,7 +181,7 @@ public class RecorderMainActivity extends ActionBarActivity {
 	}
 
 	public String getStorageDir() {
-
+		/*
 		String storagePath = Environment
 				.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
 				+ "/recorded";
@@ -201,6 +200,13 @@ public class RecorderMainActivity extends ActionBarActivity {
 		}else {
 			Log.e(TAG, "external dir is not mounted:"+storagePath);
 			
+		};*/
+		String storagePath=this.getFilesDir()+"/recorded";
+		File storageDir = null;
+		storageDir = new File(storagePath);
+
+		if (!storageDir.exists()) {
+			storageDir.mkdirs();
 		}
 
 		return storagePath;

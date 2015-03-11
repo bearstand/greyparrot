@@ -59,21 +59,18 @@ public class Mp3Recorder extends AbstractService {
 		}
 		mFilePath = intent.getStringExtra("filename");
 		// create file
-		try {
-			output = new FileOutputStream(new File(mFilePath));
-			mIsRecording = true;
-			// start recording thread
-			recordThread = new RecordThread();
-			recordThread.start();
-			runAsForeground();
+		mIsRecording = true;
+		
+		// start recording thread
+		recordThread = new RecordThread();
+		recordThread.start();
+		runAsForeground();
 			
-			//TEST code for capture exception
-			//Log.e("TEST code", "throw a RuntimeException");
-			//throw( new RuntimeException());
+		//TEST code for capture exception
+		//Log.e("TEST code", "throw a RuntimeException");
+		//throw( new RuntimeException());
 			
-		} catch (FileNotFoundException e) {
-			Log.e(TAG, "create file failed", e);
-		}
+
 		// TODO: If the service is stopped by system,it is better to continue recording, but it needs to :
 		// 1. get a new filename
 		// 2. record in the new file and let the user know the new file
@@ -187,6 +184,7 @@ public class Mp3Recorder extends AbstractService {
 				sendResultMessage(MSG_REC_STARTED);
 
 				int readSize = 0;
+				output = new FileOutputStream(new File(mFilePath));
 
 				while (mIsRecording) {
 					readSize = audioRecord.read(buffer, 0, minBufferSize);
@@ -215,6 +213,10 @@ public class Mp3Recorder extends AbstractService {
 				addID3();
 				output.close();
 
+			} catch( FileNotFoundException e) {
+				
+			} catch (SecurityException e){
+				
 			} catch (IOException e) {
 				sendResultMessage(MSG_ERROR_WRITE_FILE);
 				Log.e(TAG, "write file failed", e);

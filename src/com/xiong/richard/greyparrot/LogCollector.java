@@ -29,12 +29,13 @@ public class LogCollector {
 		if (storagePath != null)
 			return storagePath;
 		File root = Environment.getExternalStorageDirectory();
+		//File root = ctxt.getFilesDir();
 		if (!root.canWrite()) {
 			root = ctxt.getCacheDir();
 		}
 
 		File dir = new File(root.getAbsolutePath() + File.separator
-				+ "greyparrot");
+				+ "log");
 		if (!dir.exists()) {
 			dir.mkdirs();
 			Log.i(TAG, "created diretory" + dir.getAbsolutePath());
@@ -84,12 +85,12 @@ public class LogCollector {
 
 		commandLine.add("logcat");
 
-		File outFile = getLogsFile(ctxt);
-		if (outFile != null) {
-			commandLine.add("-f");
-			commandLine.add(outFile.getAbsolutePath());
+		//File outFile = getLogsFile(ctxt);
+		//if (outFile != null) {
+		//	commandLine.add("-f");
+		//	commandLine.add(outFile.getAbsolutePath());
 
-		}
+		//}
 		commandLine.add("-d");
 		commandLine.add("D");
 
@@ -111,7 +112,7 @@ public class LogCollector {
 			Log.e(TAG, "Collect logs failed : ", e);
 			log.append("Unable to get logs : " + e.toString());
 		}
-		return(new LogResult(log, outFile));
+		return(new LogResult(log, null));
 
 	}
 	
