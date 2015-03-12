@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 
 public class FileManageFragment extends DialogFragment {
 	private String filename = null;
+	private static String gStoragePath=null;
 	private String storagePath=null;
 	private String fileDeleted=null;
 	private EditText editText = null;
@@ -110,12 +112,31 @@ public class FileManageFragment extends DialogFragment {
 		shareButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent shareIntent = new Intent();
-				shareIntent.setAction(Intent.ACTION_SEND);
-				shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(storagePath + '/' + filename)));
-				shareIntent.setType("*/*");
-				startActivity(Intent.createChooser(shareIntent, "send to"));
-				closeSelf();
+				Uri fileUri;
+			    try {
+			    	File file=new File(storagePath + '/' + filename);
+			        fileUri = FileProvider.getUriForFile(getActivity(),"com.xiong.richard.greyparrot.fileprovider", file);
+			        
+			        final Intent shareIntent = ShareCompat.IntentBuilder.from(getActivity())
+			                .setType("*/*")
+			                .setStream(fileUri)
+			                .createChooserIntent()
+			                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+			        
+			        
+			        //Intent shareIntent = new Intent();
+			        //shareIntent.setAction(Intent.ACTION_SEND);
+			        //shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+			        //shareIntent.setType("*/*");
+			        //shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+			        startActivity(shareIntent);
+			        Log.i("DEBUG","sharing file:"+file.getAbsolutePath()+" uri:"+fileUri);
+			        //startActivity(Intent.createChooser(shareIntent, "send to"));
+			    }catch (IllegalArgumentException e) {
+			        Log.e(TAG,"The selected file can't be shared: " + filename);
+				}finally{
+			        closeSelf();
+				}
 			}
 		});
 		return v;
@@ -135,19 +156,27 @@ public class FileManageFragment extends DialogFragment {
 	    // Use the FileProvider to get a content URI
 		Uri fileUri;
 	    try {
-	        fileUri = FileProvider.getUriForFile(
-	        		ctx,
-	                "com.xiong.richard.greyparrot.fileprovider",
-	                file);
+	        fileUri = FileProvider.getUriForFile(ctx,"com.xiong.richard.greyparrot.fileprovider", file);
 			intent.setDataAndType(fileUri, "audio/*");
 			intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+			
 			ctx.startActivity(intent);
 	    } catch (IllegalArgumentException e) {
-	        Log.e("File Selector",
-	              "The selected file can't be shared: " +
-	              filename);
-	    }
-		
+	        Log.e(TAG, "The selected file can't be shared: " + filename);
+	    }		
+	}
+	
+	public static String getStorageDir(Context ctxt) {
+		if ( gStoragePath == null ){
+			gStoragePath=ctxt.getFilesDir()+File.separator+"recorded";
+			File storageDir = null;
+			storageDir = new File(gStoragePath);
+
+			if (!storageDir.exists()) {
+			storageDir.mkdirs();
+			}
+		}
+		return gStoragePath;
 	}
 }
 

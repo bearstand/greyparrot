@@ -181,35 +181,7 @@ public class RecorderMainActivity extends ActionBarActivity {
 	}
 
 	public String getStorageDir() {
-		/*
-		String storagePath = Environment
-				.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
-				+ "/recorded";
-
-		if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-			File storageDir = null;
-			storageDir = new File(storagePath);
-
-			if (!storageDir.exists()) {
-				storageDir.mkdirs();
-			}
-			
-			if ( !storageDir.canWrite()){
-				Log.e(TAG,"external dir is not writable:"+storagePath);
-			}
-		}else {
-			Log.e(TAG, "external dir is not mounted:"+storagePath);
-			
-		};*/
-		String storagePath=this.getFilesDir()+"/recorded";
-		File storageDir = null;
-		storageDir = new File(storagePath);
-
-		if (!storageDir.exists()) {
-			storageDir.mkdirs();
-		}
-
-		return storagePath;
+		return FileManageFragment.getStorageDir(this);
 	}
 
 	private int getState() {
