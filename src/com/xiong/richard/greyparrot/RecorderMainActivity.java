@@ -1,20 +1,15 @@
 package com.xiong.richard.greyparrot;
 
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBarActivity;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -241,7 +236,7 @@ public class RecorderMainActivity extends ActionBarActivity {
         switch (id) {
         	case R.id.help:
 	        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	        	builder.setMessage(R.string.fileDir)
+	        	builder.setMessage(getString(R.string.fileDir)+"\n"+FileManageFragment.getStorageDir(this))
 	            .setTitle(R.string.help)
 	        	.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 	                public void onClick(DialogInterface dialog, int id) {
@@ -257,6 +252,10 @@ public class RecorderMainActivity extends ActionBarActivity {
         		Log.d(TAG, "debug log is turned on");
         		Log.w(TAG, "warning log is turned on");
         		startActivity( LogCollector.getLogReportIntent("--Please add any other infomation here:",this));
+        		break;
+        		
+        	case R.id.settings:
+    			startActivity(new Intent(RecorderMainActivity.this,	SettingsActivity.class ));
         		break;
         }
         return super.onOptionsItemSelected(item);

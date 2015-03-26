@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+     <CheckBoxPreference
+        android:key="pref_private_storage"
+        android:title="@string/pref_private_storage"
+        android:summary="@string/pref_private_storage_summ"
+        android:defaultValue="false" />
+</PreferenceScreen>
