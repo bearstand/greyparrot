@@ -155,7 +155,7 @@ public class FileManageFragment extends DialogFragment {
     	}else{
     		Intent shareIntent = new Intent();
 			shareIntent.setAction(Intent.ACTION_SEND);
-			shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(storagePath + '/' + filename)));
+			shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
 			shareIntent.setType("*/*");
 			startActivity(Intent.createChooser(shareIntent, "send to"));
     	}

@@ -1,6 +1,8 @@
 package com.xiong.richard.greyparrot;
 
 import android.support.v7.app.ActionBarActivity;
+
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -172,7 +174,7 @@ public class RecorderMainActivity extends ActionBarActivity {
 		Date time = new Date();
 		String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH:mm:ss", Locale.US)
 				.format(time);
-		return (getStorageDir() + "/" + "GP" + timeStamp + ".mp3");
+		return (getStorageDir() + File.separator + "GP" + timeStamp + ".mp3");
 	}
 
 	public String getStorageDir() {
