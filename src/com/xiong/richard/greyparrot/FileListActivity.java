@@ -11,7 +11,6 @@ import java.util.Collections;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,7 +34,7 @@ public class FileListActivity extends ActionBarActivity  {
 		setContentView(R.layout.file_list_layout);
 
 		Intent intent = getIntent(); 
-		storagePath=intent.getStringExtra("storagePath");
+		storagePath=intent.getStringExtra(Consts.STORAGE_PATH_KEY);
 		
 		fileDeleted = getString(R.string.deletedFileName);
 		fileNameArray = new File(storagePath).list();

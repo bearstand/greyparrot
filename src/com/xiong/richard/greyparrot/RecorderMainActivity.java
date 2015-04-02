@@ -28,7 +28,7 @@ public class RecorderMainActivity extends ActionBarActivity {
 	private TextView infoText = null;
 	private String filename = null;
 	private boolean isRecording = false;
-	private static final String FILENAME_KEY = "filename_key";
+	
 
 	private static final int INIT_STATE = 0;
 	private static final int RECORDING_STATE = 1;
@@ -36,7 +36,7 @@ public class RecorderMainActivity extends ActionBarActivity {
 
 	private ServiceManager service;
 
-	public static final String PREFS_NAME = "FILE_NAME";
+	
 
 	private View.OnClickListener playListener = new View.OnClickListener() {
 
@@ -77,8 +77,8 @@ public class RecorderMainActivity extends ActionBarActivity {
 		public void onClick(View v) {
 			Intent intent = new Intent(RecorderMainActivity.this,
 					FileListActivity.class);
-			//TODO: replace the key with a public constant
-			intent.putExtra("storagePath", getStorageDir()); 
+			
+			intent.putExtra(Consts.STORAGE_PATH_KEY, getStorageDir()); 
 			startActivity(intent);
 
 		}
@@ -121,7 +121,7 @@ public class RecorderMainActivity extends ActionBarActivity {
 
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(FILENAME_KEY, filename);
+		outState.putString(Consts.FILENAME_KEY, filename);
 
 		Log.i(TAG, "onSaveInstanceState filename:" + filename);
 
@@ -135,7 +135,7 @@ public class RecorderMainActivity extends ActionBarActivity {
 
 	private void restoreMe(Bundle state) {
 		if (state != null) {
-			filename = state.getString(FILENAME_KEY);
+			filename = state.getString(Consts.FILENAME_KEY);
 			if (service.isRunning()) {
 				isRecording = true;
 			}
@@ -147,9 +147,9 @@ public class RecorderMainActivity extends ActionBarActivity {
 	public void onPause() {
 		super.onPause();
 
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences settings = getSharedPreferences(Consts.PREFS_NAME, 0);
 		SharedPreferences.Editor editor = settings.edit();
-		editor.putString(FILENAME_KEY, filename);
+		editor.putString(Consts.FILENAME_KEY, filename);
 
 		editor.commit();
 	}
@@ -158,8 +158,8 @@ public class RecorderMainActivity extends ActionBarActivity {
 
 		super.onResume();
 		
-		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-		filename = settings.getString(FILENAME_KEY, null);
+		SharedPreferences settings = getSharedPreferences(Consts.PREFS_NAME, 0);
+		filename = settings.getString(Consts.FILENAME_KEY, null);
 		isRecording = service.isRunning();
 		
 		Log.i(TAG, "onResume:" + filename + "isRecording:" + isRecording);
@@ -221,6 +221,7 @@ public class RecorderMainActivity extends ActionBarActivity {
 	}
 	private String getBasename( String fullPath){
 		int lastSlash;
+		if ( fullPath==null) return("");
 		lastSlash=fullPath.lastIndexOf('/');
 		return fullPath.substring(lastSlash+1);
 	}

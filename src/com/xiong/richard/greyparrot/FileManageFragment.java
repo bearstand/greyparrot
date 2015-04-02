@@ -33,7 +33,7 @@ public class FileManageFragment extends DialogFragment {
 	private Button shareButton = null;
 	private boolean filenameChanged = false;
 	private static final String TAG="FileManageFragment";
-	private static final String FILE_PROVIDER="com.xiong.richard.greyparrot.fileprovider";
+	
 	private static boolean noExternalStorage=false;
 
 	public static FileManageFragment newInstance( String filename, String storagePath){
@@ -49,7 +49,7 @@ public class FileManageFragment extends DialogFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		filename = getArguments().getString("filename");
-		storagePath=getArguments().getString("storagePath");
+		storagePath=getArguments().getString(Consts.STORAGE_PATH_KEY);
 		fileDeleted = getString(R.string.deletedFileName);
 		setStyle(STYLE_NO_TITLE,0);
 	}
@@ -143,7 +143,7 @@ public class FileManageFragment extends DialogFragment {
     	
     	if ( usePrivateStorage(activity)){
 	    	Uri fileUri;
-	        fileUri = FileProvider.getUriForFile(activity,FILE_PROVIDER, file);
+	        fileUri = FileProvider.getUriForFile(activity,Consts.FILE_PROVIDER, file);
 	        
 	        final Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
 	                .setType("*/*")
@@ -168,11 +168,14 @@ public class FileManageFragment extends DialogFragment {
 		File file = new File(filename);
 		
 
-		if ( usePrivateStorage(ctx)){
+		if ( isInPublicStorage(filename)){
+			intent.setAction(android.content.Intent.ACTION_VIEW);
+			intent.setDataAndType(Uri.fromFile(file), "audio/*");
+		}else{
 		    try {
 			    // Use the FileProvider to get a content URI
 				Uri fileUri;
-		        fileUri = FileProvider.getUriForFile(ctx,FILE_PROVIDER, file);
+		        fileUri = FileProvider.getUriForFile(ctx,Consts.FILE_PROVIDER, file);
 				intent.setDataAndType(fileUri, "audio/*");
 				intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 		    } catch (IllegalArgumentException e) {
@@ -180,9 +183,7 @@ public class FileManageFragment extends DialogFragment {
 		        Log.e(TAG, "The selected file can't be shared: " + filename);
 		        return;
 		    }
-		}else{
-			intent.setAction(android.content.Intent.ACTION_VIEW);
-			intent.setDataAndType(Uri.fromFile(file), "audio/*");
+
 
 		}
 		ctx.startActivity(intent);
@@ -193,9 +194,9 @@ public class FileManageFragment extends DialogFragment {
 		if ( gStoragePath == null ){
 
 			if (usePrivateStorage(ctxt)){
-				gStoragePath=ctxt.getFilesDir()+File.separator+"recorded";
+				gStoragePath=ctxt.getFilesDir()+File.separator+Consts.SUB_PATH;
 			}else{
-				gStoragePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)+ "/recorded";
+				gStoragePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)+ File.separator+Consts.SUB_PATH;
 				if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
 			 			Log.e(TAG, "external dir is not mounted, using private path:"+gStoragePath);
 			 			gStoragePath=ctxt.getFilesDir()+File.separator+"recorded";
@@ -218,6 +219,13 @@ public class FileManageFragment extends DialogFragment {
 	public static void reset(){
 		noExternalStorage=false;
 		gStoragePath=null;
+	}
+	public static boolean isInPublicStorage( String filename){
+		Log.i(TAG, "isInPublicStorage, filename:"+ filename+"  public path:"+Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath());
+		if ( filename.indexOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath())>= 0){
+			return(true);
+		}
+		return(false);
 	}
 }
 

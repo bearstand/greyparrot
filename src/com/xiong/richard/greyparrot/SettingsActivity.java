@@ -15,9 +15,11 @@ public class SettingsActivity extends ActionBarActivity implements OnSharedPrefe
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
+        
     }
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		FileManageFragment.reset();
+		
 	}
 	@Override
 	protected void onResume() {
