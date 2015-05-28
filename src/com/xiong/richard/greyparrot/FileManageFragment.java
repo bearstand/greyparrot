@@ -141,7 +141,13 @@ public class FileManageFragment extends DialogFragment {
 	public void shareFile(Activity activity, String filename){
     	File file=new File( filename);
     	
-    	if ( usePrivateStorage(activity)){
+    	if ( !usePrivateStorage(activity)){
+    		Intent shareIntent = new Intent();
+			shareIntent.setAction(Intent.ACTION_SEND);
+			shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+			shareIntent.setType("*/*");
+			startActivity(Intent.createChooser(shareIntent, "send to"));
+    	}else{
 	    	Uri fileUri;
 	        fileUri = FileProvider.getUriForFile(activity,Consts.FILE_PROVIDER, file);
 	        
@@ -152,12 +158,6 @@ public class FileManageFragment extends DialogFragment {
 	                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 	
 	        startActivity(shareIntent);
-    	}else{
-    		Intent shareIntent = new Intent();
-			shareIntent.setAction(Intent.ACTION_SEND);
-			shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-			shareIntent.setType("*/*");
-			startActivity(Intent.createChooser(shareIntent, "send to"));
     	}
 
 	}
@@ -168,7 +168,7 @@ public class FileManageFragment extends DialogFragment {
 		File file = new File(filename);
 		
 
-		if ( isInPublicStorage(filename)){
+		if ( !usePrivateStorage(ctx)){
 			intent.setAction(android.content.Intent.ACTION_VIEW);
 			intent.setDataAndType(Uri.fromFile(file), "audio/*");
 		}else{
@@ -196,14 +196,9 @@ public class FileManageFragment extends DialogFragment {
 			if (usePrivateStorage(ctxt)){
 				gStoragePath=ctxt.getFilesDir()+File.separator+Consts.SUB_PATH;
 			}else{
-				gStoragePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)+ File.separator+Consts.SUB_PATH;
-				if (!Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-			 			Log.e(TAG, "external dir is not mounted, using private path:"+gStoragePath);
-			 			gStoragePath=ctxt.getFilesDir()+File.separator+"recorded";
-			 			noExternalStorage=true;
-		 		};
+				gStoragePath=ctxt.getExternalFilesDir(null)+File.separator+Consts.SUB_PATH;
 			}
-			File storageDir = new File(gStoragePath);;
+			File storageDir = new File(gStoragePath);
 			if (!storageDir.exists()) {
 				storageDir.mkdirs();
 			}
@@ -221,8 +216,9 @@ public class FileManageFragment extends DialogFragment {
 		gStoragePath=null;
 	}
 	public static boolean isInPublicStorage( String filename){
-		Log.i(TAG, "isInPublicStorage, filename:"+ filename+"  public path:"+Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath());
+	
 		if ( filename.indexOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath())>= 0){
+			Log.i(TAG, "isInPublicStorage, filename:"+ filename+"  public path:"+Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath());
 			return(true);
 		}
 		return(false);

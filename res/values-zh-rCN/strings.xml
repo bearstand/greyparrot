@@ -26,6 +26,6 @@
 	<string name="not_send_log">不发送</string>
 	<string name="sorry">抱歉</string>
 	<string name="report_exception">有点意外发生，请把日志发给我们，让我们改进它。 </string>
-	<string name="pref_private_storage">应用私有存储</string>
-	<string name="pref_private_storage_summ">应用的私有存储只有本应用可以访问。即使在连接至电脑时也无法访问。</string>
+	<string name="pref_private_storage">使用保密存储</string>
+	<string name="pref_private_storage_summ">文件浏览器不能看到文件，即使在连接至电脑时也看不到，但是可以通过分享功能发送出去。</string>
 </resources>

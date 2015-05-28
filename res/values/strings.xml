@@ -27,6 +27,6 @@
 	<string name="sorry">Sorry</string>
 	<string name="report_exception"> Something unexpected happened to this APP. Please send the log to us to improve it. </string>
 	<string name="private_storage">Use App Private Storage</string>
-	<string name="private_storage_summ">App Private Storage is private to this APP.It can not be browsed when connected to PC.</string>
+	<string name="private_storage_summ">The storage can\'t be seen in file browser. And neither can be seen when connected to PC.</string>
 	
 </resources>
