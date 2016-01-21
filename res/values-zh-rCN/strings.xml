@@ -28,4 +28,10 @@
 	<string name="report_exception">有点意外发生，请把日志发给我们，让我们改进它。 </string>
 	<string name="pref_private_storage">使用保密存储</string>
 	<string name="pref_private_storage_summ">文件浏览器不能看到文件，即使在连接至电脑时也看不到，但是可以通过分享功能发送出去。</string>
+	<string name="sample_rate">采样频率</string>
+	<string name="sample_rate_summary">采样频率越高音质越好但是文件也越大</string>
+	<string name="album">作品集</string>
+	<string name="album_summary">mp3文件的作品集</string>
+    <string name="author">作者</string>
+	<string name="author_summary">作者名会写入mp3文件中</string>
 </resources>

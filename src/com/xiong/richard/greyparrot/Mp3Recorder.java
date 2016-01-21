@@ -58,6 +58,7 @@ public class Mp3Recorder extends AbstractService {
 			return(START_NOT_STICKY);
 		}
 		mFilePath = intent.getStringExtra("filename");
+		mSampleRate=intent.getIntExtra("samplerate",22050);
 		// create file
 		mIsRecording = true;
 		

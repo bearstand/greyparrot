@@ -28,5 +28,10 @@
 	<string name="report_exception"> Something unexpected happened to this APP. Please send the log to us to improve it. </string>
 	<string name="private_storage">Use App Private Storage</string>
 	<string name="private_storage_summ">The storage can\'t be seen in file browser. And neither can be seen when connected to PC.</string>
-	
+	<string name="sample_rate">Sample Rate</string>
+	<string name="sample_rate_summary">The higher the better sound quality and the file will be larger</string>
+	<string name="album">Album</string>
+	<string name="album_summary">Album name of the recorded file</string>
+    <string name="author">Author</string>
+	<string name="author_summary">Author name in the MP3 file</string>
 </resources>

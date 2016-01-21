@@ -1,12 +1,15 @@
 package com.xiong.richard.greyparrot;
 
 import java.io.File;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -140,24 +143,27 @@ public class FileManageFragment extends DialogFragment {
 	
 	public void shareFile(Activity activity, String filename){
     	File file=new File( filename);
-    	
+		Intent shareIntent = new Intent();
+		shareIntent.setAction(Intent.ACTION_SEND);
+		
     	if ( !usePrivateStorage(activity)){
-    		Intent shareIntent = new Intent();
-			shareIntent.setAction(Intent.ACTION_SEND);
+
 			shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
 			shareIntent.setType("*/*");
 			startActivity(Intent.createChooser(shareIntent, "send to"));
     	}else{
 	    	Uri fileUri;
 	        fileUri = FileProvider.getUriForFile(activity,Consts.FILE_PROVIDER, file);
-	        
-	        final Intent shareIntent = ShareCompat.IntentBuilder.from(activity)
-	                .setType("*/*")
-	                .setStream(fileUri)
-	                .createChooserIntent()
-	                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+	        shareIntent.setDataAndType(fileUri, "*/*");
 	
-	        startActivity(shareIntent);
+	        //List<ResolveInfo> resInfoList = activity.getPackageManager().queryIntentActivities(shareIntent, PackageManager.MATCH_DEFAULT_ONLY);
+	        //for (ResolveInfo resolveInfo : resInfoList) {
+	        //    String packageName = resolveInfo.activityInfo.packageName;
+	        //    activity.grantUriPermission(packageName, fileUri, Intent.FLAG_GRANT_READ_URI_PERMISSION );
+	        //}
+	        Intent newIntent=Intent.createChooser(shareIntent, getResources().getText(R.string.share));
+	        newIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+	        startActivity(newIntent);
     	}
 
 	}

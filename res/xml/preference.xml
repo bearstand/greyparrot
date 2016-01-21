@@ -5,4 +5,18 @@
         android:title="@string/pref_private_storage"
         android:summary="@string/pref_private_storage_summ"
         android:defaultValue="false" />
+     <MultiSelectListPreference 
+        android:key="pref_sample_rate"
+        android:title="@string/sample_rate"
+        android:summary="@string/sample_rate_summary"
+		android:entries="@array/samplerate_desc"
+		android:entryValues="@array/samplerate" />
+     <EditTextPreference
+         android:key="pref_album" 
+         android:title="@string/album"
+         android:summary="@string/album_summary"/>
+     <EditTextPreference
+         android:key="pref_author" 
+         android:title="@string/author"
+         android:summary="@string/author_summary"/> />
 </PreferenceScreen>
